@@ -17,4 +17,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login_manager.init_app(app)
     
+    from app.auth import auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    
     return app
