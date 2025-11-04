@@ -6,7 +6,7 @@ from app.models.user import User
 from app import db
 
 @auth_bp.route('/register', methods = ['GET', 'POST'])
-def Register():
+def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegistrationForm()

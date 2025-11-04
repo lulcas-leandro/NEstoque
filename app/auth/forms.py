@@ -16,7 +16,7 @@ class RegistrationForm(FlaskForm):
     password_confirm = PasswordField('Repita a senha', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Registrar')
     
-    def validate_on_submit(self, username):
+    def validate_username(self, username):
         if User.query.filter_by(username=username.data).first():
             raise ValidationError('Nome de usuário já existe.')
         
