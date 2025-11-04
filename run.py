@@ -1,12 +1,6 @@
-from flask import Flask
-from app.config import Config
+from app import create_app
 
-app= Flask(__name__)
-app.config.from_object(Config)
-
-@app.route('/')
-def index():
-    return "<h1>Hello</h1>"
+app= create_app()
 
 if __name__ == '__main__':
     app.run(debug=True)
