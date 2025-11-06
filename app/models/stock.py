@@ -14,7 +14,7 @@ class Product(db.Model):
 class StockMovement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     movement_type = db.Column(db.String(10), nullable=False)  # 'ENTRADA' ou 'SAIDA'
     quantity = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=lambda: datetime.now(timezone.utc))

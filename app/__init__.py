@@ -19,8 +19,8 @@ def create_app(config_class=Config):
     
     from app.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    
-    from app.main import main_bp
-    app.register_blueprint(main_bp)
+
+    from app.stock import stock_bp
+    app.register_blueprint(stock_bp)
     
     return app

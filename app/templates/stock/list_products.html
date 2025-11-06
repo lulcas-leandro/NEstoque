@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Estoque de Produtos</h1>
+    <p><a href="{{ url_for('stock.create_product') }}">Adicionar Novo Produto</a></p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <a href="{{ url_for('stock.edit_product', product_id=product.id) }}">Editar</a>
+                    <form action="{{ url_for('stock.delete_product', product_id=product.id) }}" method="post" style="display:inline;">
+                        <input type="submit" value="Deletar" onclick="return confirm('Tem certeza que deseja deletar este produto?');">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

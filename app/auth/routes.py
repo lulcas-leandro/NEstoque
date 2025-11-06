@@ -8,7 +8,7 @@ from app import db
 @auth_bp.route('/register', methods = ['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('stock.list_products'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(name=form.name.data, username=form.username.data, email=form.email.data)
@@ -29,7 +29,7 @@ def login():
         user = User.query.filter((User.username == form.username.data) | (User.email == form.username.data)).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            return redirect(url_for('main.index'))
+            return redirect(url_for('stock.list_products'))
         flash('Login inválido', 'danger')
     return render_template('auth/login.html', form=form)
 
