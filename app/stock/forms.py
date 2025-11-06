@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms import StringField, SubmitField, TextAreaField, IntegerField
+from wtforms.validators import DataRequired, ValidationError, NumberRange
 from app.models.stock import Product
 
 class ProductForm(FlaskForm):
@@ -18,3 +18,9 @@ class ProductForm(FlaskForm):
             product = Product.query.filter_by(sku=sku.data).first()
             if product is not None:
                 raise ValidationError('Este SKU já está em uso. Por favor, escolha outro.')
+
+class StockMovementForm(FlaskForm):
+    quantity = IntegerField('Quantidade', validators=[DataRequired(), NumberRange(min=1, message='A quantidade deve ser de no mínimo 1')])
+    notes = TextAreaField('Observações')
+    submit_in = SubmitField('Registrar Entrada')
+    submit_out = SubmitField('Registrar Saída')

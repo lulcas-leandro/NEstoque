@@ -15,7 +15,7 @@
         <tbody>
             {% for product in products %}
             <tr>
-                <td>{{ product.sku }}</td>
+                <td><a href="{{ url_for('stock.product_detail', product_id=product.id) }}">{{ product.sku }}</a></td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>

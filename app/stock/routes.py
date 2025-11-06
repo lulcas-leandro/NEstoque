@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.stock import stock_bp
-from app.stock.forms import ProductForm
-from app.models.stock import Product
+from app.stock.forms import ProductForm, StockMovementForm
+from app.models.stock import Product, StockMovement
 from app.extensions import db
 
 @stock_bp.route('/')
@@ -54,3 +54,47 @@ def delete_product(product_id):
     db.session.commit()
     flash('Produto deletado com sucesso!')
     return redirect(url_for('stock.list_products'))
+
+@stock_bp.route('/product/<int:product_id>', methods=['GET', 'POST'])
+@login_required
+def product_detail(product_id):
+    """Exibe os detalhes de um produto, seu histórico e o formulário de movimentação."""
+    product = Product.query.get_or_404(product_id)
+    form = StockMovementForm()
+    
+    movements = product.movements.order_by(StockMovement.timestamp.desc()).all()
+    return render_template('stock/product_detail.html', title=product.name, 
+                           product=product, form=form, movements=movements)
+    
+@stock_bp.route('/product/<int:product_id>/move', methods=['POST'])
+@login_required
+def move_stock(product_id):
+    """Processa tanto entradas quanto saídas de estoque."""
+    product = Product.query.get_or_404(product_id)
+    form = StockMovementForm()
+
+    if form.validate_on_submit():
+        quantity = form.quantity.data
+        notes = form.notes.data
+        movement_type = 'ENTRADA' if form.submit_in.data else 'SAIDA'
+
+        if movement_type == 'SAIDA' and product.quantity < quantity:
+            flash('Erro: Quantidade de saída excede o estoque disponível.')
+            return redirect(url_for('stock.product_detail', product_id=product.id))
+        if movement_type == 'ENTRADA':
+            product.quantity += quantity
+        else:
+            product.quantity -= quantity
+
+        movement = StockMovement(product_id=product.id, 
+                                 user_id=current_user.id, 
+                                 movement_type=movement_type, 
+                                 quantity=quantity, 
+                                 notes=notes)
+        
+        db.session.add(movement)
+        db.session.add(product)
+        db.session.commit()
+        flash(f'{movement_type.capitalize()} registrada com sucesso!')
+
+    return redirect(url_for('stock.product_detail', product_id=product.id))
