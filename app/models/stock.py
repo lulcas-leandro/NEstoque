@@ -2,6 +2,8 @@ from app.extensions import db
 from datetime import datetime, timezone
 
 class Product(db.Model):
+    __tablename__ = 'product'
+    
     id = db.Column(db.Integer, primary_key=True)
     sku = db.Column(db.String(64), index=True, unique=True, nullable=False)
     name = db.Column(db.String(128), nullable=False)
@@ -12,10 +14,12 @@ class Product(db.Model):
         return f'<Product {self.name}>'
 
 class StockMovement(db.Model):
+    __tablename__ = 'stock_movement'
+         
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    movement_type = db.Column(db.String(10), nullable=False)  # 'ENTRADA' ou 'SAIDA'
+    movement_type = db.Column(db.String(10), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=lambda: datetime.now(timezone.utc))
     notes = db.Column(db.Text)

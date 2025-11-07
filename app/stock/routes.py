@@ -9,14 +9,12 @@ from app.extensions import db
 @stock_bp.route('/products')
 @login_required
 def list_products():
-    """Lista todos os produtos."""
     products = Product.query.all()
     return render_template('stock/list_products.html', products=products, title='Estoque de Produtos')
 
 @stock_bp.route('/product/new', methods=['GET', 'POST'])
 @login_required
 def create_product():
-    """Cria um novo produto."""
     form = ProductForm()
     if form.validate_on_submit():
         product = Product(sku=form.sku.data, name=form.name.data, description=form.description.data)
@@ -29,7 +27,6 @@ def create_product():
 @stock_bp.route('/product/<int:product_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_id):
-    """Edita um produto existente."""
     product = Product.query.get_or_404(product_id)
     form = ProductForm(original_sku=product.sku)
     if form.validate_on_submit():
@@ -48,7 +45,6 @@ def edit_product(product_id):
 @stock_bp.route('/product/<int:product_id>/delete', methods=['POST'])
 @login_required
 def delete_product(product_id):
-    """Deleta um produto."""
     product = Product.query.get_or_404(product_id)
     db.session.delete(product)
     db.session.commit()
@@ -58,7 +54,6 @@ def delete_product(product_id):
 @stock_bp.route('/product/<int:product_id>', methods=['GET', 'POST'])
 @login_required
 def product_detail(product_id):
-    """Exibe os detalhes de um produto, seu histórico e o formulário de movimentação."""
     product = Product.query.get_or_404(product_id)
     form = StockMovementForm()
     
@@ -69,7 +64,6 @@ def product_detail(product_id):
 @stock_bp.route('/product/<int:product_id>/move', methods=['POST'])
 @login_required
 def move_stock(product_id):
-    """Processa tanto entradas quanto saídas de estoque."""
     product = Product.query.get_or_404(product_id)
     form = StockMovementForm()
 
