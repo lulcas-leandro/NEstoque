@@ -3,17 +3,19 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models.user import User
 
+msg_obg = 'Esse campo é obrigatório!'
+
 class LoginForm(FlaskForm):
-    username  = StringField('Usuário ou Email', validators=[DataRequired()])
-    password = PasswordField('Senha', validators=[DataRequired()])
+    username  = StringField('Usuário ou Email', validators=[DataRequired(message=msg_obg)])
+    password = PasswordField('Senha', validators=[DataRequired(message=msg_obg)])
     submit = SubmitField('Entrar')
     
 class RegistrationForm(FlaskForm):
-    name = StringField('Nome Completo', validators=[DataRequired()])
-    username = StringField('Nome de Usuário', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
-    password_confirm = PasswordField('Repita a senha', validators=[DataRequired(), EqualTo('password')])
+    name = StringField('Nome Completo', validators=[DataRequired(message=msg_obg)])
+    username = StringField('Nome de Usuário', validators=[DataRequired(message=msg_obg)])
+    email = StringField('Email', validators=[DataRequired(message=msg_obg), Email()])
+    password = PasswordField('Senha', validators=[DataRequired(message=msg_obg), Length(min=6)])
+    password_confirm = PasswordField('Repita a senha', validators=[DataRequired(message=msg_obg), EqualTo('password')])
     submit = SubmitField('Registrar')
     
     def validate_username(self, username):
