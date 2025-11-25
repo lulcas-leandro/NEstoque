@@ -157,6 +157,9 @@ python -c "import secrets; print(secrets.token_hex(32))"
 
 **DB_PASSWORD**: Senha do PostgreSQL (usado apenas no Docker Compose)
 
+**TIMEZONE_OFFSET**: Offset do timezone em horas (padrão: -3 para Brasília)
+- Exemplos: `-3` (Brasília), `-5` (Nova York), `0` (Londres), `+1` (Paris), `+9` (Tóquio)
+
 ## Docker
 
 O projeto inclui configuração completa para containerização:

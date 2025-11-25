@@ -24,7 +24,7 @@ class StockMovement(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=lambda: datetime.now(timezone.utc))
     notes = db.Column(db.Text)
 
-    product = db.relationship('Product', backref=db.backref('movements', lazy='dynamic'))
+    product = db.relationship('Product', backref=db.backref('movements', lazy='dynamic', cascade='all, delete-orphan'))
     user = db.relationship('User', backref=db.backref('movements', lazy='dynamic'))
 
     def __repr__(self):

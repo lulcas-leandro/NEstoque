@@ -73,8 +73,9 @@ def move_stock(product_id):
         movement_type = 'ENTRADA' if form.submit_in.data else 'SAIDA'
 
         if movement_type == 'SAIDA' and product.quantity < quantity:
-            flash('Erro: Quantidade de saída excede o estoque disponível.')
+            flash('Erro: Quantidade de saída excede o estoque disponível.', 'danger')
             return redirect(url_for('stock.product_detail', product_id=product.id))
+        
         if movement_type == 'ENTRADA':
             product.quantity += quantity
         else:
@@ -89,6 +90,12 @@ def move_stock(product_id):
         db.session.add(movement)
         db.session.add(product)
         db.session.commit()
-        flash(f'{movement_type.capitalize()} registrada com sucesso!')
+        flash(f'{movement_type.capitalize()} registrada com sucesso!', 'success')
+        return redirect(url_for('stock.product_detail', product_id=product.id))
 
-    return redirect(url_for('stock.product_detail', product_id=product.id))
+    movements = product.movements.order_by(StockMovement.timestamp.desc()).all()
+    return render_template('stock/product_detail.html', 
+                          title=product.name, 
+                          product=product, 
+                          form=form, 
+                          movements=movements)

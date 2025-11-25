@@ -3,9 +3,11 @@ from wtforms import StringField, SubmitField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, NumberRange
 from app.models.stock import Product
 
+msg_obg = 'Esse campo é obrigatório!'
+
 class ProductForm(FlaskForm):
-    sku = StringField('SKU (Código Único)', validators=[DataRequired()])
-    name = StringField('Nome do Produto', validators=[DataRequired()])
+    sku = StringField('SKU (Código Único)', validators=[DataRequired(message=msg_obg)])
+    name = StringField('Nome do Produto', validators=[DataRequired(message=msg_obg)])
     description =TextAreaField('Descrição')
     submit = SubmitField('Salvar')
     
@@ -17,10 +19,10 @@ class ProductForm(FlaskForm):
         if sku.data != self.original_sku:
             product = Product.query.filter_by(sku=sku.data).first()
             if product is not None:
-                raise ValidationError('Este SKU já está em uso. Por favor, escolha outro.')
+                raise ValidationError('Este SKU já está em uso.')
 
 class StockMovementForm(FlaskForm):
-    quantity = IntegerField('Quantidade', validators=[DataRequired(), NumberRange(min=1, message='A quantidade deve ser de no mínimo 1')])
+    quantity = IntegerField('Quantidade', validators=[DataRequired(message=msg_obg), NumberRange(min=1, message='A quantidade deve ser de no mínimo 1')])
     notes = TextAreaField('Observações')
-    submit_in = SubmitField('Registrar Entrada')
-    submit_out = SubmitField('Registrar Saída')
+    submit_in = SubmitField('Entrada')
+    submit_out = SubmitField('Saída')
