@@ -34,3 +34,21 @@ jobs:
             
             - name: Docker build
               run: docker build -t nestoque:ci .
+
+    deploy:
+        needs: validate
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Deploy to EC2
+              uses: appleboy/ssh-action@v1.2.2
+              with:
+                host: ${{ secrets.EC2_HOST }}
+                username: ${{ secrets.EC2_USER }}
+                key: ${{ secrets.EC2_SSH_KEY }}
+                script: |
+                  cd ~/NEstoque
+                  git pull origin main
+                  chmod +x scripts/deploy-aws.sh
+                  ./scripts/deploy-aws.sh
